@@ -46,7 +46,11 @@ def extract_query_structure(tree):
                         select_fields = []
                         for fild in case.children[0].children:
                             field_name = fild.children[0]
-                            alias = fild.children[1].children[0] if len(fild.children) > 1 else None
+                            # Проверяем наличие алиаса
+                            if fild.children[1] is not None:
+                                alias = fild.children[1].children[0]
+                            else: None
+                            # Добавляем поле и алиас в список
                             select_fields.append({"field": str(field_name), "alias": str(alias) if alias else None})
 
  
