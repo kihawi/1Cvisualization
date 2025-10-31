@@ -31,7 +31,7 @@ NAME: /[А-Яа-яA-Za-z0-9_."\[\]&]+/
 parser = Lark(grammar, start="start")
 
 text = """
-ВЫБРАТЬ Товары.Номенкл_атура КАК Номенклатура, Товары.Кол_ичество КАК Количество ПОМЕСТИТЬ 312 ИЗ (ВЫБРАТЬ Поле КАК Цифра ПОМЕСТИТЬ ПЕнис ИЗ Таблица КАК хуй) КАК Подзапрос ГДЕ Количество > 10;
+ВЫБРАТЬ Товары.Номенклатура КАК Номенклатура, Товары.Количество КАК Количество ПОМЕСТИТЬ 312 ИЗ Справочники.Товары ГДЕ Количество > 10;
 ВЫБРАТЬ ГруппыЗначений.ЗначениеДоступа ПОМЕСТИТЬ ЧЧЧ ИЗ Пидор ГДЕ ЗначениеДоступа = 5
 """
 
@@ -41,8 +41,13 @@ print(tree.pretty())
 def extract_query_structure(tree):
     for clause in tree.children:
         if clause.data == "query":
-                for field in clause.children:
-                    print(field) 
+                for case in clause.children:
+                    if case.data == "select_clause":
+                        select_fields = []
+                        for fild in case.children[0].children:
+                            field_name = fild.children[0]
+                            alias = fild.children[1].children[0] if len(fild.children) > 1 else None
+                            select_fields.append({"field": str(field_name), "alias": str(alias) if alias else None})
 
  
 
